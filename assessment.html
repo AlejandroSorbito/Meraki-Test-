@@ -126,39 +126,89 @@
         </div>
     </main>
 
-    <script>
-        // Interactive slider for Q1
+    <script type="module">
+        import { app } from "./Meraki_Firebase.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let currentUser = null;
+
+        // --- 1. THE SECURITY GUARD ---
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.replace("login.html");
+            } else {
+                currentUser = user; // Remember who is taking the test
+            }
+        });
+
+        // --- 2. UI LOGIC (Slider Number Update) ---
         const q1Slider = document.getElementById('q1');
         const q1Val = document.getElementById('q1-val');
         q1Slider.addEventListener('input', function () {
             q1Val.textContent = this.value + (this.value == 20 ? '+ Hrs' : ' Hrs');
         });
 
-        // Form submission simulation
-        document.getElementById('assessmentForm').addEventListener('submit', function (e) {
+        // --- 3. THE MERAKI BURNOUT ALGORITHM & DATABASE SAVE ---
+        document.getElementById('assessmentForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            // Simulate processing
+
+            if (!currentUser) return; // Prevent saving if not logged in
+
+            // Change button to show loading state
             const btn = document.querySelector('.save-profile-btn');
             btn.innerHTML = 'Analyzing Responses... ⏳';
             btn.style.opacity = '0.7';
+            btn.disabled = true;
 
-            setTimeout(() => {
+            // Gather Data from the form
+            const q1Hrs = parseInt(document.getElementById('q1').value);
+            const q2Spec = document.getElementById('q2').value;
+            // Counts how many extra role checkboxes were ticked
+            const q3RolesCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            const q4Drain = parseInt(document.getElementById('q4').value);
+
+            // === CALCULATE BURNOUT RISK SCORE ===
+            let riskScore = 0;
+
+            riskScore += q1Hrs; // Extra hours directly add to stress
+
+            if (q2Spec === 'some') riskScore += 3; // Teaching outside spec penalty
+            if (q2Spec === 'most') riskScore += 6;
+
+            riskScore += (q3RolesCount * 2); // 2 points per extra admin role
+
+            riskScore += (q4Drain * 3); // Emotional drain carries a heavy weight multiplier
+
+            // Classify Risk based on total score
+            let calculatedRisk = "Low";
+            if (riskScore >= 25) {
+                calculatedRisk = "High";
+            } else if (riskScore >= 15) {
+                calculatedRisk = "Moderate";
+            }
+
+            try {
+                // Push the calculated risk into the user's Firebase document
+                await setDoc(doc(db, "users", currentUser.uid), {
+                    assessmentScore: riskScore,
+                    riskLevel: calculatedRisk,
+                    lastAssessmentDate: new Date()
+                }, { merge: true });
+
+                // Redirect to dashboard to see results
                 window.location.href = 'dashboard.html';
-            }, 1500);
-        });
-    </script>
 
-    <script type="module">
-        import { app } from "./Meraki_Firebase.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
-        const auth = getAuth(app);
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.replace("login.html");
+            } catch (error) {
+                console.error("Error saving assessment:", error);
+                alert("Failed to save assessment. Please check console.");
+                btn.innerHTML = 'Generate AI Analysis Dashboard';
+                btn.style.opacity = '1';
+                btn.disabled = false;
             }
         });
     </script>
-</body>
 
 </html>
