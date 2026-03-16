@@ -20,6 +20,11 @@
                 <li><a href="index.html" class="login-btn">Logout</a></li>
             </ul>
         </nav>
+        <div class="welcome-header" style="margin-bottom: 2rem;">
+            <h2 class="section-title" style="margin-bottom: 0;">Welcome, <span id="principalName"
+                    style="color: var(--primary);">Principal</span>!</h2>
+            <p style="color: var(--text-muted); font-weight: 500;">School Overview Dashboard</p>
+        </div>
     </header>
 
     <main class="principal-main">
@@ -51,7 +56,8 @@
                 </thead>
                 <tbody id="teachersTableBody">
                     <tr>
-                        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading teachers from Firebase...</td>
+                        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading
+                            teachers from Firebase...</td>
                     </tr>
                 </tbody>
             </table>
@@ -93,41 +99,48 @@
     <script type="module">
         import { app } from "./Meraki_Firebase.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        // FIX 1: Added 'doc' and 'getDoc' to this list so it can fetch the specific principal's profile
+        import { getFirestore, collection, getDocs, query, where, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         onAuthStateChanged(auth, async (user) => {
-            if (!user) { 
-                window.location.replace("login.html"); 
+            if (!user) {
+                window.location.replace("login.html");
             } else {
                 try {
-                    // Fetch all users with 'role' == 'teacher'
+                    // --- FIX 2: Fetch the Principal's Name ---
+                    const principalDoc = await getDoc(doc(db, "users", user.uid));
+                    if (principalDoc.exists() && principalDoc.data().name) {
+                        document.getElementById("principalName").textContent = principalDoc.data().name;
+                    }
+
+                    // --- Fetch all users with 'role' == 'teacher' ---
                     const q = query(collection(db, "users"), where("role", "==", "teacher"));
                     const querySnapshot = await getDocs(q);
-                    
+
                     const tbody = document.getElementById("teachersTableBody");
                     tbody.innerHTML = "";
-                    
+
                     let teacherCount = 0;
                     let highRiskCount = 0;
                     let moderateRiskCount = 0;
-                    
+
                     querySnapshot.forEach((doc) => {
                         const data = doc.data();
                         teacherCount++;
-                        
+
                         let riskBadgeClass = "low-risk-bg";
                         const risk = (data.riskLevel || "Low");
-                        if(risk.toLowerCase() === "high") { 
-                            riskBadgeClass = "high-risk-bg"; 
-                            highRiskCount++; 
-                        } else if(risk.toLowerCase() === "moderate") { 
-                            riskBadgeClass = "moderate-risk-bg"; 
-                            moderateRiskCount++; 
+                        if (risk.toLowerCase() === "high") {
+                            riskBadgeClass = "high-risk-bg";
+                            highRiskCount++;
+                        } else if (risk.toLowerCase() === "moderate") {
+                            riskBadgeClass = "moderate-risk-bg";
+                            moderateRiskCount++;
                         }
-                        
+
                         const tr = document.createElement("tr");
                         tr.innerHTML = `
                             <td>${data.name || "Unknown Teacher"}</td>
@@ -137,16 +150,16 @@
                         `;
                         tbody.appendChild(tr);
                     });
-                    
+
                     if (teacherCount === 0) {
                         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 1rem;">No teachers found.</td></tr>';
                     }
-                    
+
                     // Update KPI totals
                     document.querySelector(".total-kpi .kpi-value").textContent = teacherCount;
                     document.querySelector(".high-kpi .kpi-value").textContent = highRiskCount;
                     document.querySelector(".moderate-kpi .kpi-value").textContent = moderateRiskCount;
-                    
+
                 } catch (error) {
                     console.error("Error fetching teachers data:", error);
                     document.getElementById("teachersTableBody").innerHTML = '<tr><td colspan="4" style="text-align:center; color:red; padding: 1rem;">Error loading data from Firebase.</td></tr>';
