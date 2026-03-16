@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Workload Profile - Meraki</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="dashboard-body">
 
     <header class="navbar">
@@ -22,60 +24,60 @@
     </header>
 
     <main class="profile-main">
-        
+
         <div class="profile-card">
             <div class="profile-card-header">
-                <h2>Meraki Teacher Workload Profile</h2> 
+                <h2>Meraki Teacher Workload Profile</h2>
             </div>
-            
+
             <div class="profile-card-body">
                 <div class="teacher-info-grid">
                     <div class="info-item">
-                        <span class="info-label">Name:</span> 
-                        <span class="info-value" id="displayName">Juan Dela Cruz</span> 
+                        <span class="info-label">Name:</span>
+                        <span class="info-value" id="displayName">Juan Dela Cruz</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Position:</span> 
-                        <span class="info-value" id="displayPosition">Teacher III</span> 
+                        <span class="info-label">Position:</span>
+                        <span class="info-value" id="displayPosition">Teacher III</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Specialization:</span> 
-                        <span class="info-value" id="displaySpec">Science</span> 
+                        <span class="info-label">Specialization:</span>
+                        <span class="info-value" id="displaySpec">Science</span>
                     </div>
                 </div>
 
                 <hr class="divider">
 
                 <div class="workload-lists">
-                    
+
                     <div class="workload-section">
-                        <h3>Teaching Load</h3> 
+                        <h3>Teaching Load</h3>
                         <ul id="displayTeaching">
-                            <li>Grade 8 - Science (3 Classes, 180 mins)</li> 
-                            <li>Grade 9 Biology (2 Classes, 120 mins)</li> 
+                            <li>Grade 8 - Science (3 Classes, 180 mins)</li>
+                            <li>Grade 9 Biology (2 Classes, 120 mins)</li>
                         </ul>
                     </div>
 
                     <div class="workload-section">
-                        <h3>Administrative Roles</h3> 
+                        <h3>Administrative Roles</h3>
                         <ul id="displayAdmin">
-                            <li>Grade Level Coordinator</li> 
-                            <li>Research Coordinator</li> 
+                            <li>Grade Level Coordinator</li>
+                            <li>Research Coordinator</li>
                         </ul>
                     </div>
 
                     <div class="workload-section">
-                        <h3>Ancillary Duties</h3> 
+                        <h3>Ancillary Duties</h3>
                         <ul id="displayAncillary">
-                            <li>ICT Coordinator</li> 
-                            <li>School Paper Adviser</li> 
+                            <li>ICT Coordinator</li>
+                            <li>School Paper Adviser</li>
                         </ul>
                     </div>
 
                 </div>
 
                 <div class="profile-actions">
-                    <button class="save-profile-btn" id="editProfileBtn">Edit Profile</button> 
+                    <button class="save-profile-btn" id="editProfileBtn">Edit Profile</button>
                 </div>
 
             </div>
@@ -87,19 +89,20 @@
         <div class="modal-content">
             <span class="close-btn" id="closeModal">&times;</span>
             <h2 style="color: #3b5ca0; margin-bottom: 1rem;">Edit Profile</h2>
-            
+
             <form id="editForm">
                 <label>Name:</label>
                 <input type="text" id="inputName" value="Juan Dela Cruz">
-                
+
                 <label>Position:</label>
                 <input type="text" id="inputPosition" value="Teacher III">
-                
+
                 <label>Specialization:</label>
                 <input type="text" id="inputSpec" value="Science">
 
                 <label>Teaching Load (Separate with commas):</label>
-                <textarea id="inputTeaching">Grade 8 - Science (3 Classes, 180 mins), Grade 9 Biology (2 Classes, 120 mins)</textarea>
+                <textarea
+                    id="inputTeaching">Grade 8 - Science (3 Classes, 180 mins), Grade 9 Biology (2 Classes, 120 mins)</textarea>
 
                 <label>Administrative Roles (Separate with commas):</label>
                 <textarea id="inputAdmin">Grade Level Coordinator, Research Coordinator</textarea>
@@ -119,32 +122,25 @@
         const editForm = document.getElementById("editForm");
 
         // Open the modal
-        editBtn.onclick = function() {
-            modal.style.display = "flex";
-        }
+        editBtn.onclick = function () { modal.style.display = "flex"; }
 
         // Close the modal when clicking the X
-        closeBtn.onclick = function() {
-            modal.style.display = "none";
-        }
+        closeBtn.onclick = function () { modal.style.display = "none"; }
 
         // Close the modal when clicking outside the box
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
+        window.onclick = function (event) {
+            if (event.target == modal) { modal.style.display = "none"; }
         }
 
-        // Handle the form submission
-        editForm.onsubmit = function(event) {
-            event.preventDefault(); // Stop page refresh
+        // Handle the form submission (Updating the HTML text for now)
+        editForm.onsubmit = function (event) {
+            event.preventDefault();
 
             // Update basic info
             document.getElementById("displayName").textContent = document.getElementById("inputName").value;
             document.getElementById("displayPosition").textContent = document.getElementById("inputPosition").value;
             document.getElementById("displaySpec").textContent = document.getElementById("inputSpec").value;
 
-            // Helper function to turn comma-separated text into a bulleted list
             function updateList(inputId, displayId) {
                 const items = document.getElementById(inputId).value.split(',');
                 const listHtml = items.map(item => `<li>${item.trim()}</li>`).join('');
@@ -156,11 +152,19 @@
             updateList("inputAdmin", "displayAdmin");
             updateList("inputAncillary", "displayAncillary");
 
-            // Close modal
             modal.style.display = "none";
         }
     </script>
 
-    <script type="module" src="Meraki_Firebase.js"></script>
+    <script type="module">
+        import { app } from "./Meraki_Firebase.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const auth = getAuth(app);
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.replace("login.html"); }
+        });
+    </script>
 </body>
+
 </html>

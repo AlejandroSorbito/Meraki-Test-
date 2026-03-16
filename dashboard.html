@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Dashboard - Meraki System</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="dashboard-body">
 
-   <header class="navbar">
+    <header class="navbar">
         <div class="logo-container">
             <span class="logo-icon">🔵🟡⚪</span>
             <h1 class="logo">Meraki</h1>
@@ -22,7 +24,7 @@
     </header>
 
     <main class="dashboard-main">
-        
+
         <div class="welcome-header">
             <div>
                 <h2 class="welcome-text">Welcome, <span>Juan!</span></h2>
@@ -54,7 +56,7 @@
                     <li><span class="dot ancillary-dot"></span> Ancillary Duties 25%</li>
                 </ul>
             </div>
-            
+
             <div class="pie-chart-container">
                 <div class="pie-chart"></div>
             </div>
@@ -68,7 +70,8 @@
                 </div>
                 <div class="risk-score">
                     <div class="score-circle">85%</div>
-                    <p class="risk-desc">Your current workload severely exceeds optimal ranges, putting you at high risk for burnout.</p>
+                    <p class="risk-desc">Your current workload severely exceeds optimal ranges, putting you at high risk
+                        for burnout.</p>
                 </div>
             </div>
 
@@ -81,7 +84,8 @@
                         <div class="rec-icon">⚠️</div>
                         <div class="rec-text">
                             <h4>Rebalance Admin Duties</h4>
-                            <p>You hold 2 administrative roles. Consider stepping down from Grade Level Coordinator to reduce stress.</p>
+                            <p>You hold 2 administrative roles. Consider stepping down from Grade Level Coordinator to
+                                reduce stress.</p>
                         </div>
                     </div>
                     <div class="rec-item">
@@ -97,6 +101,15 @@
 
     </main>
 
-    <script type="module" src="Meraki_Firebase.js"></script>
+    <script type="module">
+        import { app } from "./Meraki_Firebase.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const auth = getAuth(app);
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.replace("login.html"); }
+        });
+    </script>
 </body>
+
 </html>
