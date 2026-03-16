@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burnout Risk Assessment - Meraki</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+    <header class="navbar">
+        <div class="logo-container">
+            <span class="logo-icon">🔵🟡⚪</span>
+            <h1 class="logo">Meraki</h1>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Back to Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="profile-main">
+        <div class="profile-card">
+            <div class="profile-card-header">
+                <h2>Burnout Risk & Workload Assessment</h2>
+            </div>
+            
+            <div class="profile-card-body">
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
+                    Please answer the following questions to help the AI accurately quantify your workload and stress levels.
+                </p>
+
+                <form id="assessmentForm" style="display: flex; flex-direction: column; gap: 2rem;">
+                    
+                    <!-- Question 1 -->
+                    <div class="workload-section" style="border: none; margin: 0; padding: 0;">
+                        <label for="q1" style="font-weight: 600; color: var(--text-main); display: block; margin-bottom: 1rem;">
+                            1. On average, how many extra hours do you spend grading and preparing outside of official school hours per week?
+                        </label>
+                        <input type="range" id="q1" name="q1" min="0" max="20" value="5" style="width: 100%; margin-bottom: 0.5rem; accent-color: var(--primary);">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+                            <span>0 Hrs</span>
+                            <span id="q1-val" style="color: var(--primary);">5 Hrs</span>
+                            <span>20+ Hrs</span>
+                        </div>
+                    </div>
+
+                    <hr class="divider" style="margin: 0;">
+
+                    <!-- Question 2 -->
+                    <div class="workload-section" style="border: none; margin: 0; padding: 0;">
+                        <label for="q2" style="font-weight: 600; color: var(--text-main); display: block; margin-bottom: 1rem;">
+                            2. Are you currently teaching a subject outside of your college major or specialization?
+                        </label>
+                        <select id="q2" name="q2" style="width: 100%; padding: 0.85rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; font-family: inherit;">
+                            <option value="no">No, all subjects are my specialization.</option>
+                            <option value="some">Yes, 1 or 2 classes.</option>
+                            <option value="most">Yes, most of my load is outside my specialization.</option>
+                        </select>
+                    </div>
+
+                    <hr class="divider" style="margin: 0;">
+
+                    <!-- Question 3 -->
+                    <div class="workload-section" style="border: none; margin: 0; padding: 0;">
+                        <label for="q3" style="font-weight: 600; color: var(--text-main); display: block; margin-bottom: 1rem;">
+                            3. Select any additional responsibilities you are currently holding:
+                        </label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                            <label style="display: flex; gap: 0.5rem; align-items: center; cursor: pointer;">
+                                <input type="checkbox" style="width: 18px; height: 18px; accent-color: var(--primary);"> Grade Level Coordinator
+                            </label>
+                            <label style="display: flex; gap: 0.5rem; align-items: center; cursor: pointer;">
+                                <input type="checkbox" style="width: 18px; height: 18px; accent-color: var(--primary);"> Club/Organization Adviser
+                            </label>
+                            <label style="display: flex; gap: 0.5rem; align-items: center; cursor: pointer;">
+                                <input type="checkbox" style="width: 18px; height: 18px; accent-color: var(--primary);"> ICT/Property Custodian
+                            </label>
+                            <label style="display: flex; gap: 0.5rem; align-items: center; cursor: pointer;">
+                                <input type="checkbox" style="width: 18px; height: 18px; accent-color: var(--primary);"> Feeding Program Head
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr class="divider" style="margin: 0;">
+
+                    <!-- Question 4 -->
+                    <div class="workload-section" style="border: none; margin: 0; padding: 0;">
+                        <label for="q4" style="font-weight: 600; color: var(--text-main); display: block; margin-bottom: 1rem;">
+                            4. Using the scale below, how frequently do you feel emotionally drained by your work?
+                        </label>
+                        <input type="range" id="q4" name="q4" min="1" max="5" value="3" style="width: 100%; margin-bottom: 0.5rem; accent-color: var(--danger);">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+                            <span>Never</span>
+                            <span>Sometimes</span>
+                            <span>Always</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions" style="margin-top: 1rem;">
+                        <button type="submit" class="save-profile-btn" style="width: 100%;">Generate AI Analysis Dashboard</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Interactive slider for Q1
+        const q1Slider = document.getElementById('q1');
+        const q1Val = document.getElementById('q1-val');
+        q1Slider.addEventListener('input', function() {
+            q1Val.textContent = this.value + (this.value == 20 ? '+ Hrs' : ' Hrs');
+        });
+
+        // Form submission simulation
+        document.getElementById('assessmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simulate processing
+            const btn = document.querySelector('.save-profile-btn');
+            btn.innerHTML = 'Analyzing Responses... ⏳';
+            btn.style.opacity = '0.7';
+            
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Meraki System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+    <div class="login-wrapper">
+        <div class="login-header">
+            <span class="logo-icon">🔵🟡⚪</span>
+            <h2><strong>Meraki</strong> Teacher Workload & Burnout Risk Management System</h2>
+        </div>
+
+        <form class="login-form" id="loginForm">
+            <input type="text" id="username" name="username" placeholder="DepEd Email or Employee ID" required autocomplete="username">
+            <input type="password" id="password" name="password" placeholder="Password" required autocomplete="current-password">
+            
+            <select id="role" name="role" required>
+                <option value="" disabled selected>Select Access Role</option>
+                <option value="teacher">Teacher Portal</option>
+                <option value="principal">Principal Dashboard</option>
+            </select>
+
+            <button type="submit" class="login-submit-btn">Sign In to Meraki</button>
+            <a href="#" class="forgot-password">Need help logging in?</a>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevents the default form submission
+            
+            const role = document.getElementById('role').value;
+            
+            // Route based on role selection
+            if (role === 'teacher') {
+                window.location.href = 'dashboard.html';
+            } else if (role === 'principal') {
+                window.location.href = 'principal.html';
+            } else if (role === 'admin') {
+                alert('Admin dashboard interface is currently under development.');
+            } else {
+                alert('Invalid credentials. Please select a valid role.');
+            }
+        });
+    </script>
+
+</body>
+</html>

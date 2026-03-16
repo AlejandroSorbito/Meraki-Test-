@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principal Dashboard - Meraki</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+    <header class="navbar">
+        <div class="logo-container">
+            <span class="logo-icon">🔵🟡⚪</span>
+            <h1 class="logo">Meraki</h1> 
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html" class="login-btn">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="principal-main">
+        <h2 class="section-title">School Overview</h2> <div class="kpi-container">
+            <div class="kpi-card total-kpi">
+                <span class="kpi-label">Total Teachers:</span>
+                <span class="kpi-value">42</span> </div>
+            <div class="kpi-card high-kpi">
+                <span class="kpi-label">High Risk</span>
+                <span class="kpi-value text-red">8</span> </div>
+            <div class="kpi-card moderate-kpi">
+                <span class="kpi-label">Moderate Risk</span> 
+                <span class="kpi-value text-green">15</span> </div>
+        </div>
+
+        <div class="table-container">
+            <table class="teacher-table">
+                <thead>
+                    <tr>
+                        <th>Teacher</th> <th>Teaching Load</th> <th>Admin Roles</th> <th>Risk Level</th> </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Maria Santos</td> <td>6</td> <td>2</td> <td><span class="risk-badge high-risk-bg">High</span></td> </tr>
+                    <tr>
+                        <td>Jose Reyes</td> <td>5</td> <td>1</td> <td><span class="risk-badge moderate-risk-bg">Moderate</span></td> </tr>
+                    <tr>
+                        <td>Ana Cruz</td> <td>4</td> <td>1</td> <td><span class="risk-badge low-risk-bg">Low</span></td> </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="heatmap-container">
+            <h3 class="heatmap-title">School-wide Burnout Heatmap</h3>
+            <div class="heatmap-grid" id="heatmapGrid">
+                <!-- Generating sample interactive heatmap boxes -->
+                <script>
+                    const grid = document.getElementById('heatmapGrid');
+                    const colors = [
+                        {class: 'green', desc: 'Low Risk'},
+                        {class: 'yellow', desc: 'Slight Risk'},
+                        {class: 'orange', desc: 'Moderate Risk'},
+                        {class: 'red', desc: 'High Risk'},
+                        {class: 'gray', desc: 'No Data'}
+                    ];
+                    
+                    // Simple simulated generation of 48 teacher data points
+                    for(let i=1; i<=48; i++) {
+                        // Weighted random to simulate real distribution
+                        let rand = Math.random();
+                        let colorObj = colors[4]; // Default Gray
+                        
+                        if(rand < 0.3) colorObj = colors[0]; // 30% Green
+                        else if(rand < 0.6) colorObj = colors[1]; // 30% Yellow
+                        else if(rand < 0.8) colorObj = colors[2]; // 20% Orange
+                        else if(rand < 0.95) colorObj = colors[3]; // 15% Red
+                        
+                        grid.innerHTML += `<div class="heat-box ${colorObj.class}" data-tooltip="Teacher ${i} - ${colorObj.desc}"></div>`;
+                    }
+                </script>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
