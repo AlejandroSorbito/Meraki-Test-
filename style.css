@@ -2,27 +2,33 @@
 
 :root {
     /* Meraki Color System */
-    --primary: #1d4ed8;       /* DepEd/Meraki solid blue */
-    --primary-light: #3b82f6; 
+    --primary: #1d4ed8;
+    /* DepEd/Meraki solid blue */
+    --primary-light: #3b82f6;
     --primary-dark: #1e3a8a;
-    --accent: #facc15;        /* DepEd yellow accent */
+    --accent: #facc15;
+    /* DepEd yellow accent */
     --accent-light: #fef08a;
-    
+
     /* Backgrounds */
-    --bg-body: #f1f5f9;       /* Light, clean slate background */
+    --bg-body: #f1f5f9;
+    /* Light, clean slate background */
     --bg-card: #ffffff;
     --bg-glass: rgba(255, 255, 255, 0.85);
-    
+
     /* Text */
     --text-main: #0f172a;
     --text-muted: #64748b;
     --text-light: #ffffff;
-    
+
     /* Risk Levels / Semantic */
-    --danger: #ef4444;        /* High burnout risk */
-    --warning: #f59e0b;       /* Moderate risk */
-    --success: #10b981;       /* Low risk / balanced workload */
-    
+    --danger: #ef4444;
+    /* High burnout risk */
+    --warning: #f59e0b;
+    /* Moderate risk */
+    --success: #10b981;
+    /* Low risk / balanced workload */
+
     /* UI Elements */
     --border-radius: 12px;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -41,7 +47,7 @@
 
 body {
     background-color: var(--bg-body);
-    background-image: 
+    background-image:
         radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(250, 204, 21, 0.05) 0%, transparent 40%);
     background-attachment: fixed;
@@ -106,7 +112,7 @@ body {
 
 .nav-links a:hover {
     color: var(--text-light);
-    text-shadow: 0 0 8px rgba(255,255,255,0.4);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
 
 .login-btn {
@@ -133,8 +139,15 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hero h2 {
@@ -209,7 +222,7 @@ body {
 
 .card {
     background: var(--bg-card);
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: calc(var(--border-radius) + 4px);
     padding: 2rem;
     transition: var(--transition);
@@ -267,7 +280,7 @@ footer {
 /* Centers the login box perfectly on the screen */
 .login-body {
     background-color: var(--bg-body);
-    background-image: 
+    background-image:
         radial-gradient(circle at 0% 0%, rgba(29, 78, 216, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 100% 100%, rgba(250, 204, 21, 0.1) 0%, transparent 50%);
     display: flex;
@@ -284,7 +297,7 @@ footer {
     border-radius: calc(var(--border-radius) + 8px);
     overflow: hidden;
     animation: fadeIn 0.5s ease-out;
-    border: 1px solid rgba(255,255,255,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .login-header {
@@ -435,7 +448,7 @@ footer {
     background: var(--bg-card);
     padding: 1.5rem;
     border-radius: var(--border-radius);
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
@@ -467,7 +480,7 @@ footer {
 .dashboard-card {
     background: var(--bg-card);
     border-radius: var(--border-radius);
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     margin-bottom: 2rem;
     overflow: hidden;
     box-shadow: var(--shadow-md);
@@ -513,9 +526,17 @@ footer {
     display: inline-block;
 }
 
-.teaching-dot { background-color: var(--primary); }
-.admin-dot { background-color: var(--accent); }
-.ancillary-dot { background-color: var(--warning); }
+.teaching-dot {
+    background-color: var(--primary);
+}
+
+.admin-dot {
+    background-color: var(--accent);
+}
+
+.ancillary-dot {
+    background-color: var(--warning);
+}
 
 /* Pie Chart */
 .pie-chart-container {
@@ -530,13 +551,13 @@ footer {
     width: 220px;
     height: 220px;
     border-radius: 50%;
-    background: conic-gradient(
-        var(--primary) 0% 50%, 
-        var(--accent) 50% 75%, 
-        var(--warning) 75% 100%
-    );
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.05), var(--shadow-sm);
+    background: conic-gradient(var(--primary) 0% 50%,
+            var(--accent) 50% 75%,
+            var(--warning) 75% 100%);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05), var(--shadow-sm);
     transition: transform 0.3s ease;
+    /* Added to anchor the inner circle */
+    position: relative;
 }
 
 .pie-chart:hover {
@@ -545,12 +566,16 @@ footer {
 
 .pie-chart::after {
     content: '';
+    /* Added alignment properties to center the circle perfectly */
     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 130px;
     height: 130px;
     background: var(--bg-card);
     border-radius: 50%;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Alerts / AI Section */
@@ -574,7 +599,7 @@ footer {
 
 .card-header {
     padding: 1.5rem;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -690,13 +715,13 @@ footer {
     background: var(--bg-card);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     overflow: hidden;
 }
 
 .profile-card-header {
     background: linear-gradient(135deg, var(--bg-body), var(--bg-card));
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding: 2rem;
 }
 
@@ -748,7 +773,7 @@ footer {
 .divider {
     border: 0;
     height: 1px;
-    background-color: rgba(0,0,0,0.05);
+    background-color: rgba(0, 0, 0, 0.05);
     margin: 2.5rem 0;
 }
 
@@ -833,7 +858,7 @@ footer {
 
 .kpi-card {
     background: var(--bg-card);
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: var(--border-radius);
     padding: 1.5rem 2rem;
     display: flex;
@@ -862,12 +887,28 @@ footer {
     line-height: 1;
 }
 
-.total-kpi { background-color: var(--bg-card); color: var(--text-main); }
-.high-kpi { background: linear-gradient(135deg, #fef2f2, #fff1f2); border-color: #fecdd3; }
-.moderate-kpi { background: linear-gradient(135deg, #f0fdf4, #f2fbf5); border-color: #bbf7d0; }
+.total-kpi {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+}
 
-.text-red { color: var(--danger); }
-.text-green { color: var(--success); }
+.high-kpi {
+    background: linear-gradient(135deg, #fef2f2, #fff1f2);
+    border-color: #fecdd3;
+}
+
+.moderate-kpi {
+    background: linear-gradient(135deg, #f0fdf4, #f2fbf5);
+    border-color: #bbf7d0;
+}
+
+.text-red {
+    color: var(--danger);
+}
+
+.text-green {
+    color: var(--success);
+}
 
 /* Teacher Data Table */
 .table-container {
@@ -876,7 +917,7 @@ footer {
     box-shadow: var(--shadow-md);
     overflow: hidden;
     margin-bottom: 2.5rem;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .teacher-table {
@@ -923,16 +964,27 @@ footer {
     letter-spacing: 0.5px;
 }
 
-.high-risk-bg { background-color: #fee2e2; color: var(--danger); } 
-.moderate-risk-bg { background-color: #fef3c7; color: var(--warning); } 
-.low-risk-bg { background-color: #d1fae5; color: var(--success); } 
+.high-risk-bg {
+    background-color: #fee2e2;
+    color: var(--danger);
+}
+
+.moderate-risk-bg {
+    background-color: #fef3c7;
+    color: var(--warning);
+}
+
+.low-risk-bg {
+    background-color: #d1fae5;
+    color: var(--success);
+}
 
 /* Heatmap Section */
 .heatmap-container {
     background: var(--bg-card);
     padding: 2.5rem;
     border-radius: var(--border-radius);
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: var(--shadow-md);
 }
 
@@ -990,21 +1042,35 @@ footer {
     visibility: visible;
 }
 
-.heat-box.gray { background-color: #e2e8f0; }
-.heat-box.green { background-color: var(--success); }
-.heat-box.yellow { background-color: var(--warning); }
-.heat-box.orange { background-color: #f97316; }
-.heat-box.red { background-color: var(--danger); }
+.heat-box.gray {
+    background-color: #e2e8f0;
+}
+
+.heat-box.green {
+    background-color: var(--success);
+}
+
+.heat-box.yellow {
+    background-color: var(--warning);
+}
+
+.heat-box.orange {
+    background-color: #f97316;
+}
+
+.heat-box.red {
+    background-color: var(--danger);
+}
 
 /* --- Pop up Edit Modal --- */
 .modal {
     display: none;
-    position: fixed; 
-    z-index: 1000; 
+    position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
-    width: 100%; 
-    height: 100%; 
+    width: 100%;
+    height: 100%;
     background-color: rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(4px);
     justify-content: center;
@@ -1026,8 +1092,15 @@ footer {
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .close-btn {

@@ -17,6 +17,7 @@
         </div>
         <nav>
             <ul class="nav-links">
+                <li><a href="assessment.html">Take Assessment</a></li>
                 <li><a href="profile.html">My Profile</a></li>
                 <li><a href="index.html" class="login-btn">Logout</a></li>
             </ul>
@@ -28,22 +29,22 @@
         <div class="welcome-header">
             <div>
                 <h2 class="welcome-text">Welcome, <span>Juan!</span></h2>
-                <p class="date-text" id="currentDate">Monday, October 15, 2026</p>
+                <p class="date-text" id="currentDate">Teacher Dashboard</p>
             </div>
         </div>
 
         <div class="stats-row">
             <div class="stat-box">
                 <span class="stat-label">Teaching Load</span>
-                <strong>5 Classes</strong>
+                <strong>0 Classes</strong>
             </div>
             <div class="stat-box">
                 <span class="stat-label">Admin Roles</span>
-                <strong>2</strong>
+                <strong>0</strong>
             </div>
             <div class="stat-box">
                 <span class="stat-label">Ancillary Tasks</span>
-                <strong>3</strong>
+                <strong>0</strong>
             </div>
         </div>
 
@@ -51,9 +52,9 @@
             <div class="chart-info">
                 <h3>Workload Distribution</h3>
                 <ul class="chart-legend">
-                    <li><span class="dot teaching-dot"></span> Teaching 50%</li>
-                    <li><span class="dot admin-dot"></span> Admin Roles 25%</li>
-                    <li><span class="dot ancillary-dot"></span> Ancillary Duties 25%</li>
+                    <li><span class="dot teaching-dot"></span> Teaching</li>
+                    <li><span class="dot admin-dot"></span> Admin Roles</li>
+                    <li><span class="dot ancillary-dot"></span> Ancillary Duties</li>
                 </ul>
             </div>
 
@@ -66,12 +67,14 @@
             <div class="dashboard-card risk-card">
                 <div class="card-header">
                     <h3>🤖 AI Burnout Analysis</h3>
-                    <span class="risk-badge">HIGH RISK</span>
+                    <span class="risk-badge" style="background-color: var(--text-muted);">NO DATA</span>
                 </div>
                 <div class="risk-score">
-                    <div class="score-circle">85%</div>
-                    <p class="risk-desc">Your current workload severely exceeds optimal ranges, putting you at high risk
-                        for burnout.</p>
+                    <div class="score-circle" style="border-color: var(--text-muted); color: var(--text-muted);">?</div>
+                    <p class="risk-desc">Take the Burnout Risk Assessment to generate your AI workload analysis.</p>
+
+                    <a href="assessment.html" class="login-btn"
+                        style="display: inline-block; margin-top: 1.5rem; text-align: center;">Take Risk Assessment</a>
                 </div>
             </div>
 
@@ -84,15 +87,14 @@
                         <div class="rec-icon">⚠️</div>
                         <div class="rec-text">
                             <h4>Rebalance Admin Duties</h4>
-                            <p>You hold 2 administrative roles. Consider stepping down from Grade Level Coordinator to
-                                reduce stress.</p>
+                            <p>Consider stepping down from heavy administrative roles to reduce stress.</p>
                         </div>
                     </div>
                     <div class="rec-item">
                         <div class="rec-icon">📊</div>
                         <div class="rec-text">
                             <h4>Schedule Optimization</h4>
-                            <p>Consolidate your Grade 8 Science classes to minimize prep time between sessions.</p>
+                            <p>Consolidate classes to minimize prep time between sessions.</p>
                         </div>
                     </div>
                 </div>
@@ -110,27 +112,51 @@
         const db = getFirestore(app);
 
         onAuthStateChanged(auth, async (user) => {
-            if (!user) { 
-                window.location.replace("login.html"); 
+            if (!user) {
+                window.location.replace("login.html");
             } else {
                 try {
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
                         document.querySelector('.welcome-text span').textContent = userData.name || "Teacher";
-                        
-                        // Optionally update stats if available in DB
-                        if(userData.teachingLoadCount !== undefined) {
+
+                        // Update stats from profile
+                        if (userData.teachingLoadCount !== undefined) {
                             document.querySelectorAll('.stat-box strong')[0].textContent = userData.teachingLoadCount + " Classes";
                         }
-                        if(userData.adminRolesCount !== undefined) {
+                        if (userData.adminRolesCount !== undefined) {
                             document.querySelectorAll('.stat-box strong')[1].textContent = userData.adminRolesCount;
                         }
-                        if(userData.ancillaryTasksCount !== undefined) {
+                        if (userData.ancillaryTasksCount !== undefined) {
                             document.querySelectorAll('.stat-box strong')[2].textContent = userData.ancillaryTasksCount;
                         }
-                    } else {
-                        console.log("No such user document!");
+
+                        // NEW: Update Risk Score dynamically from the Assessment!
+                        if (userData.riskLevel) {
+                            const badge = document.querySelector('.risk-badge');
+                            const circle = document.querySelector('.score-circle');
+                            const desc = document.querySelector('.risk-desc');
+
+                            badge.textContent = userData.riskLevel.toUpperCase() + " RISK";
+                            circle.textContent = userData.assessmentScore ? userData.assessmentScore : "N/A";
+
+                            // Change colors based on the result
+                            let color = 'var(--success)';
+                            if (userData.riskLevel === 'High') {
+                                color = 'var(--danger)';
+                                desc.textContent = "Your current workload severely exceeds optimal ranges, putting you at high risk for burnout.";
+                            } else if (userData.riskLevel === 'Moderate') {
+                                color = 'var(--warning)';
+                                desc.textContent = "Your workload is elevated. Monitor your stress levels and consider rebalancing duties.";
+                            } else {
+                                desc.textContent = "Your workload is well-balanced. Keep up the great work!";
+                            }
+
+                            badge.style.backgroundColor = color;
+                            circle.style.borderColor = color;
+                            circle.style.color = color;
+                        }
                     }
                 } catch (error) {
                     console.error("Error fetching user data:", error);
