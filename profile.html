@@ -159,10 +159,51 @@
     <script type="module">
         import { app } from "./Meraki_Firebase.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const auth = getAuth(app);
-        onAuthStateChanged(auth, (user) => {
-            if (!user) { window.location.replace("login.html"); }
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) { 
+                window.location.replace("login.html"); 
+            } else {
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        
+                        // Update display fields
+                        document.getElementById("displayName").textContent = userData.name || "N/A";
+                        document.getElementById("displayPosition").textContent = userData.position || "N/A";
+                        document.getElementById("displaySpec").textContent = userData.specialization || "N/A";
+                        
+                        // Update modal inputs
+                        document.getElementById("inputName").value = userData.name || "";
+                        document.getElementById("inputPosition").value = userData.position || "";
+                        document.getElementById("inputSpec").value = userData.specialization || "";
+                        
+                        // Populate lists
+                        if(userData.teachingLoad) {
+                            document.getElementById("displayTeaching").innerHTML = 
+                                Array.isArray(userData.teachingLoad) ? userData.teachingLoad.map(i => `<li>${i}</li>`).join('') : `<li>${userData.teachingLoad}</li>`;
+                            document.getElementById("inputTeaching").value = Array.isArray(userData.teachingLoad) ? userData.teachingLoad.join(', ') : userData.teachingLoad;
+                        }
+                        if(userData.adminRoles) {
+                            document.getElementById("displayAdmin").innerHTML = 
+                                Array.isArray(userData.adminRoles) ? userData.adminRoles.map(i => `<li>${i}</li>`).join('') : `<li>${userData.adminRoles}</li>`;
+                            document.getElementById("inputAdmin").value = Array.isArray(userData.adminRoles) ? userData.adminRoles.join(', ') : userData.adminRoles;
+                        }
+                        if(userData.ancillaryDuties) {
+                            document.getElementById("displayAncillary").innerHTML = 
+                                Array.isArray(userData.ancillaryDuties) ? userData.ancillaryDuties.map(i => `<li>${i}</li>`).join('') : `<li>${userData.ancillaryDuties}</li>`;
+                            document.getElementById("inputAncillary").value = Array.isArray(userData.ancillaryDuties) ? userData.ancillaryDuties.join(', ') : userData.ancillaryDuties;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching profile profile data:", error);
+                }
+            }
         });
     </script>
 </body>

@@ -104,10 +104,38 @@
     <script type="module">
         import { app } from "./Meraki_Firebase.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const auth = getAuth(app);
-        onAuthStateChanged(auth, (user) => {
-            if (!user) { window.location.replace("login.html"); }
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) { 
+                window.location.replace("login.html"); 
+            } else {
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        document.querySelector('.welcome-text span').textContent = userData.name || "Teacher";
+                        
+                        // Optionally update stats if available in DB
+                        if(userData.teachingLoadCount !== undefined) {
+                            document.querySelectorAll('.stat-box strong')[0].textContent = userData.teachingLoadCount + " Classes";
+                        }
+                        if(userData.adminRolesCount !== undefined) {
+                            document.querySelectorAll('.stat-box strong')[1].textContent = userData.adminRolesCount;
+                        }
+                        if(userData.ancillaryTasksCount !== undefined) {
+                            document.querySelectorAll('.stat-box strong')[2].textContent = userData.ancillaryTasksCount;
+                        }
+                    } else {
+                        console.log("No such user document!");
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+            }
         });
     </script>
 </body>
